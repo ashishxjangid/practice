@@ -1,0 +1,32 @@
+const style = document.createElement('style');
+style.textContent = `
+  .feature-hidden {
+    display: none !important;
+  }
+`;
+document.head.appendChild(style);
+
+const allFeatureSlides = document.querySelectorAll('.product__media-item.grid__item.slider__slide');
+
+allFeatureSlides.forEach((slide, index) => {
+  const clone = slide.cloneNode(true);
+
+  // hide all except the first one
+  if (index !== 0) clone.classList.add('feature-hidden');
+
+  bigFeatureContainer.appendChild(clone);
+});
+
+const featureSlides = document.querySelectorAll('#my-duplicate-gallery .duplicate-feature-image li');
+const newThumbs = document.querySelectorAll('#my-duplicate-gallery .duplicate-thumbnails li');
+
+newThumbs.forEach((thumb, index) => {
+  thumb.addEventListener('click', () => {
+
+    // hide all feature images
+    featureSlides.forEach(f => f.classList.add('feature-hidden'));
+
+    // show selected one
+    featureSlides[index].classList.remove('feature-hidden');
+  });
+});
