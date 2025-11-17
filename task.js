@@ -1,36 +1,45 @@
 const footer = document.querySelector('footer');
 
 const newGallery = document.createElement('div');
-newGallery.id = "my-duplicate-gallery";
-newGallery.style.marginTop = "50px";
+newGallery.id = "duplicate-gallery";
+newGallery.style.margin = "50px";
 
 newGallery.innerHTML = `
-  <div class="duplicate-feature-image" style="margin-bottom:30px;"></div>
+  <div class="feature-image" style="margin-bottom:30px;"></div>
 
-  <ul class="duplicate-thumbnails" 
-      style="display:flex; flex-wrap:wrap; gap:10px; list-style:none; padding:0;">
+  <ul class="thumbnails-images" 
+      style="
+        display: grid; 
+        grid-template-columns: 1fr 1fr 1fr 1fr; 
+        gap:10px; 
+        list-style: none; 
+        padding:0;
+        margin-left: 550px;
+        width: 600px;
+      ">
   </ul>
 `;
 
-footer.insertAdjacentElement("afterend", newGallery);
+footer.after(newGallery);
 
-const thumbnailSlides = document.querySelectorAll('.thumbnail-list__item.slider__slide');
+const thumbnailImages = document.querySelectorAll('.thumbnail-list__item.slider__slide');
 
-const targetFeature = document.querySelector('.product__media-item.grid__item.slider__slide.is-active.scroll-trigger.animate--fade-in');
+const featureImage = document.querySelector('.product__media-item.grid__item.slider__slide.is-active.scroll-trigger.animate--fade-in');
 
-const bigFeatureContainer = document.querySelector('#my-duplicate-gallery .duplicate-feature-image');
+const bigFeature = document.querySelector('#duplicate-gallery .feature-image');
 
-const bigClone = targetFeature.cloneNode(true);
-bigClone.style.maxWidth = "400px";    
-bigClone.style.display = "block";      
+const featureClone = featureImage.cloneNode(true);
+featureClone.style.width = "400px";    
+featureClone.style.display = "block";    
+featureClone.style.marginLeft = "625px"; 
 
-bigFeatureContainer.appendChild(bigClone);
+bigFeature.appendChild(featureClone);
 
-const thumbsContainer = document.querySelector('#my-duplicate-gallery .duplicate-thumbnails');
+const thumbs = document.querySelector('#duplicate-gallery .thumbnails-images');
 
-thumbnailSlides.forEach(li => {
+thumbnailImages.forEach(li => {
   const clone = li.cloneNode(true);
-  clone.style.width = "80px";
+  clone.style.width = "140px";
   clone.style.cursor = "pointer";
-  thumbsContainer.appendChild(clone);
+  thumbs.appendChild(clone);
 });
