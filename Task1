@@ -1,1 +1,188 @@
+// Color images data
+const galleryData = [
+  { color: 'BLUE', colorCode: '#4fc1e8', label: '1/5 - BLUE' },
+  { color: 'BLUE', colorCode: '#4ba3d6', label: '2/5 - BLUE' },
+  { color: 'BLUE', colorCode: '#4a89dc', label: '3/5 - BLUE' },
+  { color: 'BLUE', colorCode: '#0033ff', label: '4/5 - BLUE' },
+  { color: 'BLUE', colorCode: '#00baff', label: '5/5 - BLUE' },
 
+  { color: 'RED', colorCode: '#ed5565', label: '1/3 - RED' },
+  { color: 'RED', colorCode: '#a94442', label: '2/3 - RED' },
+  { color: 'RED', colorCode: '#ff5370', label: '3/3 - RED' },
+  
+  { color: 'GREEN', colorCode: '#ffee00', label: '1/4 - GREEN' },
+  { color: 'GREEN', colorCode: '#cddc39', label: '2/4 - GREEN' },
+  { color: 'GREEN', colorCode: '#00e676', label: '3/4 - GREEN' },
+  { color: 'GREEN', colorCode: '#00b050', label: '4/4 - GREEN' }
+];
+
+const FILTERS = ['ALL', 'RED', 'GREEN', 'BLUE'];
+
+function initColorGallery() {
+  // Page layout
+  const container = document.createElement('div');
+  container.style.display = 'flex';
+  container.style.justifyContent = 'flex-start';
+  container.style.alignItems = 'flex-start';
+  container.style.padding = '40px 0 0 190px';
+  document.body.appendChild(container);
+
+  // Images left side
+  const imgSide = document.createElement('div');
+  imgSide.style.width = '350px';
+  container.appendChild(imgSide);
+
+  
+  // Controls right side
+  const controls = document.createElement('div');
+  controls.style.marginLeft = '60px';
+  container.appendChild(controls);
+
+  // Main display area
+  const mainImgArea = document.createElement('div');
+  imgSide.appendChild(mainImgArea);
+
+  // Thumbnails 
+  const thumbGrid = document.createElement('div');
+  thumbGrid.style.display = 'flex';
+  thumbGrid.style.flexWrap = 'wrap';
+  thumbGrid.style.marginTop = '15px';
+  thumbGrid.style.gap = '18px 18px';
+  thumbGrid.style.width = '300px';
+  imgSide.appendChild(thumbGrid);
+
+  // Button group
+  const filterBtns = document.createElement('div');
+  filterBtns.style.marginBottom = '32px';
+  controls.appendChild(filterBtns);
+
+  // Dropdown filter
+  const dropdownWrap = document.createElement('div');
+  dropdownWrap.style.marginTop = '20px';
+  controls.appendChild(dropdownWrap);
+
+  const filterSelect = document.createElement('select');
+  filterSelect.style.fontSize = '1.1rem';
+  filterSelect.style.padding = '3px 14px';
+  FILTERS.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.innerText = f;
+    filterSelect.appendChild(opt);
+  });
+  dropdownWrap.appendChild(filterSelect);
+
+  // Gallery state
+  let activeFilter = 'ALL';
+  let mainIdx = 0;
+  let visiblePics = galleryData;
+
+  // Display main color box
+  function showMain(idx) {
+    mainImgArea.innerHTML = '';
+    const pic = visiblePics[idx];
+
+    const featureBox = document.createElement('div');
+    featureBox.style.width = '300px';
+    featureBox.style.height = '200px';
+    featureBox.style.background = pic.colorCode;
+    featureBox.style.display = 'flex';
+    featureBox.style.alignItems = 'flex-start';
+    featureBox.style.justifyContent = 'flex-start';
+    featureBox.style.fontSize = '1.50rem';
+    featureBox.style.fontWeight = '400';
+    featureBox.style.letterSpacing = '1px';
+    featureBox.style.padding = '10px 10px';
+    featureBox.style.marginBottom = '8px';
+    featureBox.style.marginTop = '50px';
+    featureBox.style.boxSizing = 'border-box';
+    featureBox.style.color = '#111';
+    featureBox.innerText = pic.label;
+    mainImgArea.appendChild(featureBox);
+  }
+
+  // Draw thumbnails
+  function showThumbs() {
+    thumbGrid.innerHTML = '';
+    visiblePics.forEach((pic, i) => {
+      const thumb = document.createElement('div');
+      thumb.style.width = '60px';
+      thumb.style.height = '60px';
+      thumb.style.background = pic.colorCode;
+      thumb.style.display = 'flex';
+      thumb.style.alignItems = 'flex-start';
+      thumb.style.justifyContent = 'flex-start';
+      thumb.style.fontSize = '0.50rem';
+      thumb.style.padding = '3px 4px';
+      thumb.style.boxSizing = 'border-box';
+      thumb.style.cursor = 'pointer';
+      thumb.style.transition = 'box-shadow 0.2s';
+      thumb.innerText = pic.label;
+      thumb.style.position = 'relative';
+      thumb.style.color = '#111';
+      thumb.style.marginBottom = '0px';
+      thumb.style.flex = '0 0 60px';
+
+      if (i === mainIdx) {
+        thumb.style.outline = '2px solid #222';
+        thumb.style.boxShadow = '0 0 0 1px #fff, 0 0 0 3px #222';
+        thumb.style.zIndex = 2;
+      } else {
+        thumb.style.outline = 'none';
+        thumb.style.boxShadow = 'none';
+      }
+
+      thumb.onclick = () => {
+        mainIdx = i;
+        showMain(mainIdx);
+        showThumbs();
+      };
+
+      thumbGrid.appendChild(thumb);
+    });
+  }
+
+  // Change filter and refresh UI
+  function applyFilter(filter) {
+    activeFilter = filter;
+    filterSelect.value = filter;
+    visiblePics = (filter === 'ALL')
+      ? galleryData
+      : galleryData.filter(pic => pic.color === filter);
+    mainIdx = 0;
+    showMain(mainIdx);
+    showThumbs();
+  }
+
+  // Filter buttons
+  FILTERS.forEach(f => {
+    const btn = document.createElement('button');
+    btn.innerText = f;
+    btn.style.fontSize = '1.05rem';
+    btn.style.marginRight = '3px';
+    btn.style.marginTop = '100px';
+    btn.style.padding = '3px 8px';
+    btn.style.cursor = 'pointer';
+    btn.style.border = '1px solid #aaa';
+    btn.style.background = '#fafafa9a';
+    btn.style.transition = 'background 0.15s,border 0.15s';
+    btn.style.marginBottom = '4px';
+    btn.onmouseenter = () => btn.style.background = '#e7e7e7';
+    btn.onmouseleave = () => btn.style.background = '#fafafa6c';
+    btn.onclick = () => applyFilter(f);
+    filterBtns.appendChild(btn);
+  });
+
+  // Dropdown handler
+  filterSelect.onchange = e => applyFilter(e.target.value);
+
+  // Initial render
+  applyFilter('ALL');
+}
+
+// DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initColorGallery);
+} else {
+  initColorGallery();
+}
