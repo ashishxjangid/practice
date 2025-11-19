@@ -4,7 +4,6 @@ window.addEventListener("load", (event) => {
 });
 
 function initChanges() {
-    const footer = document.querySelector("footer");
 
     const newGallery = document.createElement("div");
     newGallery.id = "duplicate-gallery";
@@ -13,6 +12,16 @@ function initChanges() {
     newGallery.innerHTML = `
       <ul class="feature-image" style="margin-bottom:30px;"></ul>
 
+      <div class="rightSide">
+        <select class="myDropdown" style="width:90px; padding:10px; border:1px solid #ccc; border-radius:5px; background-color: #f8f8f8; font-size: 16px;">
+          <option>White</option>
+          <option>Black</option>
+          <option>Red</option>
+          <option>Yellow</option>
+          <option>All</option>
+        </select>
+      </div>
+
       <ul class="thumbnails-images" 
           style="
             display: grid; 
@@ -20,25 +29,24 @@ function initChanges() {
             gap:10px; 
             list-style: none; 
             padding:0;
-            margin-left: 550px;
             width: 600px;
           ">
       </ul>
     `;
 
-    footer.after(newGallery);
+    document.body.append(newGallery);
 
-    const thumbnailImages = document.querySelectorAll(".thumbnail-list__item.slider__slide");
+    const thumbnailSlides = document.querySelectorAll(".thumbnail-list__item.slider__slide");
 
-    const bigFeature = document.querySelector("#duplicate-gallery .feature-image");
+    const mainFeature = document.querySelector("#duplicate-gallery .feature-image");
 
-    const thumbs = document.querySelector("#duplicate-gallery .thumbnails-images");
+    const allThumbnails = document.querySelector("#duplicate-gallery .thumbnails-images");
 
-    thumbnailImages.forEach((li) => {
+    thumbnailSlides.forEach((li) => {
         const clone = li.cloneNode(true);
         clone.style.width = "140px";
         clone.style.cursor = "pointer";
-        thumbs.appendChild(clone);
+        allThumbnails.appendChild(clone);
     });
 
     const style = document.createElement("style");
@@ -46,32 +54,84 @@ function initChanges() {
       .hidden {
         display: none !important;
       }
+
+      #duplicate-gallery .feature-image {
+        list-style: none !important;
+        margin: 0;
+        padding: 0;
+      }
+      #duplicate-gallery .thumbnails-images li button[aria-current="true"] {
+        box-shadow: 0 0 0 1.5px black !important;
+      }
     `;
     document.head.appendChild(style);
 
-    const allFeatures = document.querySelectorAll(".product__media-item");
+    const featureSlides = document.querySelectorAll(".product__media-item");
 
-    allFeatures.forEach((slide, index) => {
+    featureSlides.forEach((slide, index) => {
         const clone = slide.cloneNode(true);
-        clone.style.width = "400px";
-        clone.style.display = "block";
-        clone.style.marginLeft = "625px";
+        //clone.style.width = "400px";
+       
 
         if (index !== 0) clone.classList.add("hidden");
 
-        bigFeature.appendChild(clone);
+        mainFeature.appendChild(clone);
     });
 
-    const featureSlides = document.querySelectorAll("#duplicate-gallery .feature-image li");
-    const newThumbs = document.querySelectorAll("#duplicate-gallery .thumbnails-images li");
+    const featureLists = document.querySelectorAll("#duplicate-gallery .feature-image li");
+    const thumbnailLists = document.querySelectorAll("#duplicate-gallery .thumbnails-images li button");
 
-    newThumbs.forEach((thumb, index) => {
+    thumbnailLists.forEach((thumb, index) => {
         thumb.addEventListener("click", () => {
-            featureSlides.forEach((f) => {
+            featureLists.forEach((f) => {
                 f.classList.add("hidden");
             });
 
-            featureSlides[index].classList.remove("hidden");
+            featureLists[index].classList.remove("hidden");
+
+            thumbnailLists.forEach(t => t.removeAttribute("aria-current"));
+
+            thumb.setAttribute("aria-current", "true");
+            
         });
     });
+
+    //Dropdown feature
+    featureSlides[0].setAttribute("color", "White");
+    featureSlides[1].setAttribute("color", "All");
+    featureSlides[8].setAttribute("color", "Red");
+    featureSlides[3].setAttribute("color", "Black");
+    featureSlides[17].setAttribute("color", "Yellow");
+
+    const dropdown = document.querySelector("#duplicate-gallery .myDropdown");
+
+    dropdown.addEventListener("change", () => {
+
+        const selectedColor = dropdown.value;
+
+        featureLists.forEach(f => f.classList.add("hidden"));
+
+        thumbnailLists.forEach(t => t.removeAttribute("aria-current"));
+
+        featureSlides.forEach((slide, index) => {
+            const slideColor = slide.getAttribute("color");
+
+            if (slideColor === selectedColor) {
+
+                featureLists[index].classList.remove("hidden");
+                     
+                thumbnailLists[index].setAttribute("aria-current", "true"); 
+                                
+            }
+        });
+    });
+
+    //Title
+    const title= document.querySelector("#ProductInfo-template--18242047181044__main .product__title h1").cloneNode(true);
+
+    const priceInfo= document.querySelector("#ProductInfo-template--18242047181044__main #price-template--18242047181044__main").cloneNode(true);
+
+    document.querySelector("#duplicate-gallery .rightSide").prepend(title);
+
+    document.querySelector("#duplicate-gallery .rightSide h1").after(priceInfo);
 }
