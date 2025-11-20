@@ -135,3 +135,38 @@ function initChanges() {
 
     document.querySelector("#duplicate-gallery .rightSide h1").after(priceInfo);
 }
+
+//style
+.parent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;   /* 2 columns */
+    grid-auto-rows: auto;             /* rows grow by content */
+    gap: 20px;                         /* optional spacing */
+}
+//input
+<div class="nameBox" style="margin-top:20px;">
+    <input type="text" id="userNameInput" placeholder="Enter your name"
+           style="padding:8px; border:1px solid #ccc; border-radius:5px;">
+    <button id="greetBtn" 
+            style="padding:8px 12px; margin-left:5px; cursor:pointer; border-radius:5px;">
+        Submit
+    </button>
+    <p id="greetMessage" style="margin-top:10px; font-size:18px; font-weight:500;"></p>
+</div>
+
+// Greeting Feature
+const greetBtn = document.querySelector("#greetBtn");
+const nameInput = document.querySelector("#userNameInput");
+const greetMsg = document.querySelector("#greetMessage");
+
+greetBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+
+    if (name === "") {
+        greetMsg.textContent = "Please enter your name.";
+        return;
+    }
+
+    greetMsg.textContent = `Hello ${name}, welcome to our website!`;
+});
+
