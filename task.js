@@ -8,12 +8,16 @@ function initChanges() {
     const newGallery = document.createElement("div");
     newGallery.id = "duplicate-gallery";
     newGallery.style.margin = "50px";
+    newGallery.style.display= "grid";
+    newGallery.style.gridTemplateColumns= "1fr 1fr";
+    newGallery.style.gridAutoRows= "auto";  
+    newGallery.style.gap= "20px";  
 
     newGallery.innerHTML = `
       <ul class="feature-image" style="margin-bottom:30px;"></ul>
 
       <div class="rightSide">
-        <select class="myDropdown" style="width:90px; padding:10px; border:1px solid #ccc; border-radius:5px; background-color: #f8f8f8; font-size: 16px;">
+        <select class="myDropdown" style="width:90px; padding:10px; margin-top:85px; border:1px solid #ccc; border-radius:5px; background-color: #f8f8f8; font-size: 16px;">
           <option>White</option>
           <option>Black</option>
           <option>Red</option>
@@ -30,6 +34,7 @@ function initChanges() {
             list-style: none; 
             padding:0;
             width: 600px;
+            transform: translateX(150px);
           ">
       </ul>
     `;
@@ -70,7 +75,8 @@ function initChanges() {
 
     featureSlides.forEach((slide, index) => {
         const clone = slide.cloneNode(true);
-        //clone.style.width = "400px";
+        clone.style.width = "400px";
+        clone.style.marginLeft = "250px";
        
 
         if (index !== 0) clone.classList.add("hidden");
@@ -102,7 +108,7 @@ function initChanges() {
     featureSlides[8].setAttribute("color", "Red");
     featureSlides[3].setAttribute("color", "Black");
     featureSlides[17].setAttribute("color", "Yellow");
-
+    
     const dropdown = document.querySelector("#duplicate-gallery .myDropdown");
 
     dropdown.addEventListener("change", () => {
@@ -132,41 +138,71 @@ function initChanges() {
     const priceInfo= document.querySelector("#ProductInfo-template--18242047181044__main #price-template--18242047181044__main").cloneNode(true);
 
     document.querySelector("#duplicate-gallery .rightSide").prepend(title);
+    title.style.color = "#bd9494ff";
+    title.style.fontFamily = "fantasy";
+    title.style.fontStyle= "italic";
 
     document.querySelector("#duplicate-gallery .rightSide h1").after(priceInfo);
+    priceInfo.querySelector(".price__container").style.setProperty("color", "#2e608aff", "important");
+
+    //Description
+    const description= document.querySelector(".product__description").cloneNode(true);
+    newGallery.append(description);
+    description.style.color = "black";
+    description.style.marginTop = "100px";
+
+    //message box
+    const messageBox= document.createElement("div");
+    messageBox.style.marginLeft= "650px";
+
+    messageBox.innerHTML = `
+      <input type="text" id="userNameInput" placeholder="Enter your name"
+             style="padding:8px; border:1px solid #ccc; border-radius:5px;">
+      <button id="greetBtn" 
+              style="padding:8px 12px; margin-left:10px; cursor:pointer; border-radius:5px; background-color: #cef5ef;">
+          Get Message
+      </button>
+      <button id="clearBtn"
+              style="padding:8px 12px; margin-left:5px; cursor:pointer; border-radius:5px; background-color: #f7cbce;">
+          Clear
+      </button>    
+      <p id="greetMessage" style="margin-top:10px; font-size:20px; font-weight: 400; color:black; "></p>
+    `;
+
+    newGallery.before(messageBox);
+
+    const greetBtn = document.querySelector("#greetBtn");
+    const clearBtn = document.querySelector("#clearBtn");
+    const nameInput = document.querySelector("#userNameInput");
+    const greetMsg = document.querySelector("#greetMessage");
+
+    greetBtn.addEventListener("click", () => {
+
+      const name = nameInput.value.trim();
+      if(name === ""){
+        greetMsg.textContent = `Please enter your name!`;
+      }
+      else{
+        greetMsg.textContent = `Hello ${name}, welcome to our website!`;
+        nameInput.value= "";
+      }
+    });
+
+    clearBtn.addEventListener("click", ()=> {
+      nameInput.value= "";
+      greetMsg.textContent = "";
+    });
+
+    //Bottom container
+    const items = document.querySelectorAll(".grid.product-grid .grid__item .card__information");
+    const bottomContainer = document.createElement("div");
+    document.body.append(bottomContainer);
+    bottomContainer.style.width = "400px";
+    bottomContainer.style.height = "400px";
+
+    items.forEach(item => {
+      const clonedDiv = item.cloneNode(true);
+      bottomContainer.append(clonedDiv);
+    });
+
 }
-
-//style
-.parent {
-    display: grid;
-    grid-template-columns: 1fr 1fr;   /* 2 columns */
-    grid-auto-rows: auto;             /* rows grow by content */
-    gap: 20px;                         /* optional spacing */
-}
-//input
-<div class="nameBox" style="margin-top:20px;">
-    <input type="text" id="userNameInput" placeholder="Enter your name"
-           style="padding:8px; border:1px solid #ccc; border-radius:5px;">
-    <button id="greetBtn" 
-            style="padding:8px 12px; margin-left:5px; cursor:pointer; border-radius:5px;">
-        Submit
-    </button>
-    <p id="greetMessage" style="margin-top:10px; font-size:18px; font-weight:500;"></p>
-</div>
-
-// Greeting Feature
-const greetBtn = document.querySelector("#greetBtn");
-const nameInput = document.querySelector("#userNameInput");
-const greetMsg = document.querySelector("#greetMessage");
-
-greetBtn.addEventListener("click", () => {
-    const name = nameInput.value.trim();
-
-    if (name === "") {
-        greetMsg.textContent = "Please enter your name.";
-        return;
-    }
-
-    greetMsg.textContent = `Hello ${name}, welcome to our website!`;
-});
-
