@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="products"></div>
 
+    <script src="app.js"></script>
+</body>
+</html>
+
+
+const products = document.getElementById("products");
+products.style.display= "flex";
+products.style.gap= "30px";
+products.style.justifyContent= "space-evenly";
+products.style.marginTop= "50px";
+
+fetch('https://dummyjson.com/products?limit=5')
+    .then(res => res.json())
+    .then(data => {
+        
+        data.products.forEach(product => {
+            
+            const card = document.createElement("div");
+            card.style.border = "1.5px solid #313030ff";
+            card.style.padding = "15px";
+            card.style.width = "200px";
+            card.style.borderRadius = "10px";
+               
+            let qty = 1;
+
+            card.innerHTML = `
+                <img src="${product.images}" width="180" />
+                <h3>${product.title}</h3>
+                <p>Price: $ ${product.price}</p>
+
+                <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin:15px;">
+                    <button class="minus-btn" style="  width: 32px;height: 32px;font-size: 18px;border: none;background: #ddd;border-radius: 50%;cursor: pointer;">-</button>
+                    <span class="qty-value" style="font-weight:bold; ">${qty}</span>
+                    <button class="plus-btn" style="  width: 32px;height: 32px;font-size: 18px;border: none;background: #ddd;border-radius: 50%;cursor: pointer;">+</button>
+                </div>
+
+                <button class="add-cart-btn" style="
+                    margin-left:40px; 
+                    width: 60%;
+                    padding: 10px 0;
+                    background: #534985ff;
+                    color: white;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    ">
+                    Add to Cart</button>
+            `;
+
+            products.appendChild(card);
+            
+            const qtyValue = card.querySelector(".qty-value");
+            const minusBtn = card.querySelector(".minus-btn");
+            const plusBtn = card.querySelector(".plus-btn");
+            const addCartBtn = card.querySelector(".add-cart-btn");
+
+            plusBtn.addEventListener("click", () => {
+                qty++;
+                qtyValue.textContent = qty;
+            });
+
+            minusBtn.addEventListener("click", () => {
+                if (qty > 1) {
+                    qty--;
+                    qtyValue.textContent = qty;
+                }
+            });
+
+            addCartBtn.addEventListener("click", () => {
+                    qtyValue.textContent = 1;
+            });
+        });
+    });
