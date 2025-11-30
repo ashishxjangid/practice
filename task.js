@@ -424,3 +424,175 @@ function initChanges() {
     });
 
 }
+
+// 3- latest code
+window.addEventListener("load", () => {
+  console.log("page is fully loaded");
+  initChanges();
+});
+
+function initChanges() {
+
+  // ---------------------- Create Main Gallery ----------------------
+  const gallery = document.createElement("div");
+  gallery.id = "duplicate-gallery";
+  gallery.style = `
+    margin:50px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  `;
+
+  gallery.innerHTML = `
+    <ul class="feature-image" style="margin-bottom:30px;"></ul>
+
+    <div class="rightSide">
+      <select class="myDropdown" style="width:90px; padding:10px; margin-top:85px;">
+        <option>White</option>
+        <option>Black</option>
+        <option>Red</option>
+        <option>Yellow</option>
+        <option>All</option>
+      </select>
+    </div>
+
+    <ul class="thumbnails-images"
+        style="
+          display:grid;
+          grid-template-columns:repeat(4,1fr);
+          gap:10px;
+          list-style:none;
+          padding:0;
+          width:600px;
+          transform:translateX(150px);
+        ">
+    </ul>
+  `;
+
+  document.body.append(gallery);
+
+  // ---------------------- Add CSS ----------------------
+  const style = document.createElement("style");
+  style.textContent = `
+    .hidden { display:none !important; }
+
+    #duplicate-gallery .feature-image {
+      list-style:none; margin:0; padding:0;
+    }
+
+    #duplicate-gallery .thumbnails-images li button[aria-current="true"] {
+      box-shadow:0 0 0 1.5px black !important;
+    }
+  `;
+  document.head.append(style);
+
+  // ---------------------- Clone Thumbnails ----------------------
+  const thumbnailSlides = document.querySelectorAll(".thumbnail-list__item.slider__slide");
+  const thumbnailsContainer = gallery.querySelector(".thumbnails-images");
+
+  thumbnailSlides.forEach(slide => {
+    const clone = slide.cloneNode(true);
+    clone.style.width = "140px";
+    clone.style.cursor = "pointer";
+    thumbnailsContainer.append(clone);
+  });
+
+  // ---------------------- Clone Feature Images ----------------------
+  const originalFeatures = document.querySelectorAll(".product__media-item");
+  const featureContainer = gallery.querySelector(".feature-image");
+
+  originalFeatures.forEach((slide, index) => {
+    const clone = slide.cloneNode(true);
+    clone.style = "width:400px; margin-left:250px;";
+    if (index !== 0) clone.classList.add("hidden");
+    featureContainer.append(clone);
+  });
+
+  const featureImages = featureContainer.querySelectorAll("li");
+  const thumbnailButtons = thumbnailsContainer.querySelectorAll("li button");
+
+  // ---------------------- Thumbnail Click Logic ----------------------
+  thumbnailButtons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      featureImages.forEach(img => img.classList.add("hidden"));
+      featureImages[index].classList.remove("hidden");
+
+      thumbnailButtons.forEach(b => b.removeAttribute("aria-current"));
+      btn.setAttribute("aria-current", "true");
+    });
+  });
+
+  // ---------------------- Set Colors ----------------------
+  originalFeatures[0].setAttribute("color", "White");
+  originalFeatures[1].setAttribute("color", "All");
+  originalFeatures[8].setAttribute("color", "Red");
+  originalFeatures[3].setAttribute("color", "Black");
+  originalFeatures[17].setAttribute("color", "Yellow");
+
+  // ---------------------- Dropdown Filter ----------------------
+  const dropdown = gallery.querySelector(".myDropdown");
+
+  dropdown.addEventListener("change", () => {
+    const color = dropdown.value;
+
+    featureImages.forEach(f => f.classList.add("hidden"));
+    thumbnailButtons.forEach(b => b.removeAttribute("aria-current"));
+
+    originalFeatures.forEach((slide, index) => {
+      if (slide.getAttribute("color") === color) {
+        featureImages[index].classList.remove("hidden");
+        thumbnailButtons[index].setAttribute("aria-current", "true");
+      }
+    });
+  });
+
+  // ---------------------- Title & Price ----------------------
+  const title = document.querySelector(".product__title h1").cloneNode(true);
+  const price = document.querySelector("#price-template--18242047181044__main").cloneNode(true);
+
+  gallery.querySelector(".rightSide").prepend(title);
+  title.style = "color:#bd9494ff; font-family:fantasy; font-style:italic;";
+  title.after(price);
+
+  price.querySelector(".price__container")
+       .style.setProperty("color", "#2e608aff", "important");
+
+  // ---------------------- Description ----------------------
+  const description = document.querySelector(".product__description").cloneNode(true);
+  description.style = "color:black; margin-top:100px;";
+  gallery.append(description);
+
+  // ---------------------- Greeting Box ----------------------
+  const msgBox = document.createElement("div");
+  msgBox.style.marginLeft = "650px";
+  msgBox.innerHTML = `
+    <input id="userNameInput" placeholder="Enter your name" style="padding:8px;">
+    <button id="greetBtn" style="padding:8px 12px;">Get Message</button>
+    <button id="clearBtn" style="padding:8px 12px;">Clear</button>
+    <p id="greetMessage" style="margin-top:10px; font-size:20px;"></p>
+  `;
+  gallery.before(msgBox);
+
+  const nameInput = msgBox.querySelector("#userNameInput");
+  const greetMsg = msgBox.querySelector("#greetMessage");
+
+  msgBox.querySelector("#greetBtn").addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    greetMsg.textContent = name ? `Hello ${name}, welcome to our website!` : "Please enter your name!";
+    nameInput.value = "";
+  });
+
+  msgBox.querySelector("#clearBtn").addEventListener("click", () => {
+    nameInput.value = "";
+    greetMsg.textContent = "";
+  });
+
+  // ---------------------- Bottom Container ----------------------
+  const items = document.querySelectorAll(".grid.product-grid .grid__item .card__information");
+  const bottom = document.createElement("div");
+  bottom.style = "width:400px; height:400px;";
+  document.body.append(bottom);
+
+  items.forEach(item => bottom.append(item.cloneNode(true)));
+}
+
