@@ -59,3 +59,63 @@ document.querySelectorAll("#categories input").forEach((input) => {
         }
     })
 })
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="margin: 100px 0 0 550px;">Products</h1>
+    <div style="display:flex;">
+        <div id="products" style="display: grid; grid-template-columns: 1fr 1fr 1fr; margin:100px 200px 0 200px; width:45%; gap:50px; background-color: #d9e1e4; border-radius: 10px; padding:15px;"></div>
+        <select id="categories" style= "font-size:20px; border:1px solid black; border-radius: 5px; margin-top:150px; height:40px; text-align: center;">
+            <option value="all"> all</option>
+            <option value="fruits"> fruits</option>
+            <option value="vegetables"> vegetables</option>
+            <option value="flowers"> flowers</option>
+        </select>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+const urls= { fruits: ["https://t4.ftcdn.net/jpg/15/35/16/15/240_F_1535161513_RbGU7j2y57MNn0zPo7FkZOmalMkJc6Nz.jpg", "https://t4.ftcdn.net/jpg/16/02/65/69/240_F_1602656907_xoKlqjchznolmPXK9HRik4KR2f3WCzTj.jpg","https://t4.ftcdn.net/jpg/18/20/50/85/240_F_1820508506_9tprllQQL8sspsYr9bbu39NfStxlUJxp.jpg"],
+            vegetables: ["https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg","https://t3.ftcdn.net/jpg/03/02/13/68/240_F_302136848_Dhf0FUEKTIIRyMeCdBfJVVxavVSh4zM8.jpg","https://t4.ftcdn.net/jpg/15/75/79/01/240_F_1575790148_AwGDvhJcTps0p9vkiXL7WQFyYxzqvREk.jpg"],
+            flowers: ["https://t3.ftcdn.net/jpg/15/70/15/32/240_F_1570153220_ZUNnZHIATpIgKit4VGdxURi1IuOIWBE6.jpg","https://t3.ftcdn.net/jpg/16/76/54/70/240_F_1676547044_NmPuDm37Agk0d52l79Dx4Lo3HLpjqhw9.jpg","https://t3.ftcdn.net/jpg/05/68/96/92/240_F_568969200_FBwvEKlu4AFx1nfUYFv6yAENCBrvv9TE.jpg"]  
+}
+const all= urls.fruits.concat(urls.vegetables, urls.flowers);
+
+const productsDiv= document.querySelector("#products");
+
+function showImages(arr){
+    productsDiv.innerHTML="";
+    arr.forEach((url) => {    
+        const img= document.createElement("img");
+        img.src= url;
+        img.width= "200";
+        productsDiv.append(img);
+    })
+}
+
+const dropdown= document.querySelector("#categories");
+dropdown.addEventListener("change", ()=> {    
+    if(dropdown.value==="all"){
+        showImages(all);
+    }
+    else{
+        const cat= dropdown.value;
+        showImages();
+    }
+        
+})
