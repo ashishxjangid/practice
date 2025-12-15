@@ -596,3 +596,181 @@ function initChanges() {
   items.forEach(item => bottom.append(item.cloneNode(true)));
 }
 
+
+//final 
+
+
+window.addEventListener("load", () => {
+  console.log("page is fully loaded");
+  createGallery();
+});
+
+function createGallery() {
+
+  const gallery = document.createElement("div");
+  gallery.id = "duplicate-gallery";
+  gallery.style = `
+    margin:50px;
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    grid-auto-rows= auto; 
+    gap:20px;
+  `;
+
+  gallery.innerHTML = `
+    <ul class="feature-image" style="margin-bottom:30px;"></ul>
+
+    <div class="rightSide">
+      <span style="position: relative; top:-35px; left: 47px;">Color</span>
+      <select class="myDropdown" style="width:90px; padding:10px; margin-top:65px; border:1px solid #ccc; border-radius:5px; background-color: #f8f8f8; font-size: 16px;">
+      </select>
+      <span style="position: relative; top:-35px; left: 138px;">Size</span>
+      <select class="sizeDropdown" style="width:75px; padding:10px; margin-top:65px; margin-left:100px; border:1px solid #ccc; border-radius:5px; background-color: #f8f8f8; font-size: 16px;">
+      </select>
+    </div>
+
+    <ul class="thumbnails-images"
+        style="
+          display:grid;
+          grid-template-columns:repeat(4,1fr);
+          gap:10px;
+          list-style:none;
+          padding:0;
+          width:600px;
+          transform:translateX(150px);
+          margin-left:125px;
+        ">
+    </ul>
+
+    <div id="detailBox"></div>
+  `;
+
+  document.body.append(gallery);
+
+  const style = document.createElement("style");
+  style.textContent = `
+    .hidden { display:none !important; }
+
+    #duplicate-gallery .feature-image {
+      list-style:none; margin:0; padding:0;
+    }
+
+    #duplicate-gallery .thumbnails-images li button[aria-current="true"] {
+      box-shadow:0 0 0 1.5px black !important;
+    }
+  `;
+  document.head.append(style);
+
+  const thumbnailSlides = document.querySelectorAll(".thumbnail-list__item.slider__slide");
+  const thumbnailsContainer = gallery.querySelector(".thumbnails-images");
+
+  thumbnailSlides.forEach(slide => {
+    const clone = slide.cloneNode(true);
+    clone.style.width = "140px";
+    clone.style.cursor = "pointer";
+    thumbnailsContainer.append(clone);
+  });
+
+
+  const featureSlides = document.querySelectorAll(".product__media-item.grid__item");
+  const featureContainer = gallery.querySelector(".feature-image");
+
+  featureSlides.forEach((slide, index) => {
+    const clone = slide.cloneNode(true);
+    clone.style.width = "400px";
+    clone.style.marginLeft = "370px";
+
+    if (index !== 0) clone.classList.add("hidden");
+
+    featureContainer.append(clone);
+  });
+
+  const featureImages = featureContainer.querySelectorAll("li");
+  const thumbnailButtons = thumbnailsContainer.querySelectorAll("li button");
+
+  thumbnailButtons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      featureImages.forEach(f => f.classList.add("hidden"));
+      featureImages[index].classList.remove("hidden");
+
+      thumbnailButtons.forEach(b => b.removeAttribute("aria-current"));
+      btn.setAttribute("aria-current", "true");
+    });
+  });
+
+
+  //Create color Dropdown
+  const dropdown = gallery.querySelector(".myDropdown");
+  
+  function createDropdown(n, dropdown){
+    const buttons= (document.querySelectorAll(".js.product-form__input")[n]).querySelectorAll("input");
+
+    buttons.forEach(button => {
+      const option =document.createElement('option');
+      option.value= button.getAttribute("value");
+      option.textContent= button.getAttribute("value");
+      dropdown.append(option);
+    })
+      
+  }
+  createDropdown(0, dropdown);
+
+  //Create size Dropdown
+  const sizeDropdown = gallery.querySelector(".sizeDropdown");
+  createDropdown(1, sizeDropdown);
+
+
+  //Dropdown feature
+  featureSlides[0].setAttribute("color", "Black");
+  featureSlides[5].setAttribute("color", "Camel");
+  featureSlides[10].setAttribute("color", "Blue");
+
+ 
+  dropdown.addEventListener("change", () => {
+    const color = dropdown.value;
+
+    featureImages.forEach(f => f.classList.add("hidden"));
+    thumbnailButtons.forEach(b => b.removeAttribute("aria-current"));
+
+    featureSlides.forEach((slide, index) => {
+      if (slide.getAttribute("color") === color) {
+        featureImages[index].classList.remove("hidden");
+        thumbnailButtons[index].setAttribute("aria-current", "true");
+      }
+    });
+  });
+
+  //Title
+  const title= document.querySelector(".product__title h1").cloneNode(true);
+  gallery.querySelector(".rightSide").prepend(title);
+  title.style = "color:#2b2454; font-family:fantasy; font-style:italic; margin-top:80px;";
+
+  const price= document.querySelector("#price-template--18242047181044__main").cloneNode(true);
+  title.after(price);
+
+  price.querySelector(".price__container")
+      .style.setProperty("color", "#773071ff", "important");
+
+  
+  //Description
+  const description= document.querySelector(".product__description").cloneNode(true);
+  description.style= "color: black; font-size: 18px;";
+  const detailBox= document.querySelector("#detailBox");
+  detailBox.append(description);
+                                  
+  //Buttons 
+  const soldOutBtn= document.createElement("button");
+  soldOutBtn.style= "width: 400px; height: 50px; background: white; border:1px solid black; font-size:15px; margin:13px 0; cursor: not-allowed;"
+  soldOutBtn.textContent= "Sold out";
+  detailBox.prepend(soldOutBtn);
+
+  const buyNowBtn= document.createElement("button");
+  buyNowBtn.style= "width: 400px; height: 50px; background: black; border:1px solid black; font-size:15px; color:white; margin-bottom:60px; cursor: pointer;"
+  buyNowBtn.textContent= "Buy it now";
+  soldOutBtn.after(buyNowBtn);
+
+
+  const counterBtn= document.querySelector(".price-per-item__container").cloneNode(true);
+  gallery.querySelector(".rightSide").append(counterBtn);
+  counterBtn.style= "margin-top:100px;"
+}
