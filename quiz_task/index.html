@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <input type="number" id="numberInput" placeholder="Enter number of questions">
+    <button onclick="fetchQuestions()" id="numberBtn">Get Questions</button>
+    <div id="inputMsg">Enter number of questions between 1 to 50</div>
+    <div id="loadMsg">Fetching Questions.... Please Wait!</div>
+    <div id="quizBox"></div>
+    <div id="msgBox"></div>
+
+    <h2 style="margin-left: 700px; display: none;">Results</h2>
+    <div id="resultsBox"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
