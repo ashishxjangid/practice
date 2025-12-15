@@ -1,84 +1,170 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div id="products"></div>
-
-    <script src="app.js"></script>
-</body>
-</html>
-
-
 const products = document.getElementById("products");
 products.style.display= "flex";
 products.style.gap= "30px";
 products.style.justifyContent= "space-evenly";
 products.style.marginTop= "50px";
 
-fetch('https://dummyjson.com/products?limit=5')
-    .then(res => res.json())
-    .then(data => {
-        
-        data.products.forEach(product => {
+let cart = [];
+
+function renderCart() {
+    const cartItems = document.getElementById("cart-items");
+    const totalPrice = document.getElementById("total-price");
+
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(item => {
+        total += item.price * item.qty;
+
+        const div = document.createElement("div");
+        div.style.border = "1px solid #ccc";
+        div.style.padding = "10px";
+        div.style.margin = "10px 0";
+        div.style.borderRadius = "10px";
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+
+        div.innerHTML = `
+            <div>
+                <p><b>${item.title}</b></p>
+                <p>Price: $ ${item.price}</p>
+            </div>
+
+            <img src="${item.images}" width="80" height="80"/>
+
+            <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin:15px;">
+                <button class="minus">-</button>
+                <span class="qty-val" style="font-weight:bold;">${item.qty}</span>
+                <button class="plus">+</button>
+            </div>
             
-            const card = document.createElement("div");
-            card.style.border = "1.5px solid #313030ff";
-            card.style.padding = "15px";
-            card.style.width = "200px";
-            card.style.borderRadius = "10px";
-               
-            let qty = 1;
+            <button class="remove-item" style="
+                padding:5px 10px;
+                background: #f31f1fff;
+                color:white;
+                border:none;
+                border-radius:5px;
+                cursor:pointer;
+            ">Remove</button>
+        `;
 
-            card.innerHTML = `
-                <img src="${product.images}" width="180" />
-                <h3>${product.title}</h3>
-                <p>Price: $ ${product.price}</p>
+        cartItems.appendChild(div);
 
-                <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin:15px;">
-                    <button class="minus-btn" style="  width: 32px;height: 32px;font-size: 18px;border: none;background: #ddd;border-radius: 50%;cursor: pointer;">-</button>
-                    <span class="qty-value" style="font-weight:bold; ">${qty}</span>
-                    <button class="plus-btn" style="  width: 32px;height: 32px;font-size: 18px;border: none;background: #ddd;border-radius: 50%;cursor: pointer;">+</button>
-                </div>
+        div.querySelector(".remove-item").addEventListener("click", () => {
+            cart = cart.filter(p => p.id !== item.id);
+            renderCart();
+        });
 
-                <button class="add-cart-btn" style="
-                    margin-left:40px; 
-                    width: 60%;
-                    padding: 10px 0;
-                    background: #534985ff;
-                    color: white;
-                    font-size: 16px;
-                    border: none;
-                    border-radius: 10px;
-                    cursor: pointer;
-                    ">
-                    Add to Cart</button>
-            `;
+        const qtyVal = div.querySelector(".qty-val");
+        const minus = div.querySelector(".minus");
+        const plus = div.querySelector(".plus");
 
-            products.appendChild(card);
-            
-            const qtyValue = card.querySelector(".qty-value");
-            const minusBtn = card.querySelector(".minus-btn");
-            const plusBtn = card.querySelector(".plus-btn");
-            const addCartBtn = card.querySelector(".add-cart-btn");
+        plus.addEventListener("click", () => {
+            item.qty++;
+            qtyVal.textContent = item.qty;
+        });
 
-            plusBtn.addEventListener("click", () => {
-                qty++;
-                qtyValue.textContent = qty;
-            });
-
-            minusBtn.addEventListener("click", () => {
-                if (qty > 1) {
-                    qty--;
-                    qtyValue.textContent = qty;
-                }
-            });
-
-            addCartBtn.addEventListener("click", () => {
-                    qtyValue.textContent = 1;
-            });
+        minus.addEventListener("click", () => {
+            if (item.qty > 1) {
+                item.qty--;
+                qtyVal.textContent = item.qty;
+            }
         });
     });
+
+    totalPrice.textContent = total.toFixed(2);
+}
+
+
+async function loadProducts() {
+
+    const res = await fetch('https://dummyjson.com/products?limit=5');
+    const data = await res.json();
+
+    data.products.forEach(product => {
+        
+        const card = document.createElement("div");
+        card.style.border = "1.5px solid #313030ff";
+        card.style.padding = "15px";
+        card.style.width = "200px";
+        card.style.borderRadius = "10px";
+           
+        let qty = 1;
+
+        card.innerHTML = `
+            <img src="${product.images}" width="180" />
+            <h3>${product.title}</h3>
+            <p>Price: $ ${product.price}</p>
+
+            <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin:15px;">
+                <button class="minus-btn" style="width:32px;height:32px;">-</button>
+                <span class="qty-value" style="font-weight:bold;">${qty}</span>
+                <button class="plus-btn" style="width:32px;height:32px;">+</button>
+            </div>
+
+            <button class="add-cart-btn" style="
+                margin-left:40px; 
+                width: 60%;
+                padding: 10px 0;
+                background: #534985ff;
+                color: white;
+                font-size: 16px;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;">
+                Add to Cart
+            </button>
+        `;
+
+        products.appendChild(card);
+        
+        const qtyValue = card.querySelector(".qty-value");
+        const minusBtn = card.querySelector(".minus-btn");
+        const plusBtn = card.querySelector(".plus-btn");
+        const addCartBtn = card.querySelector(".add-cart-btn");
+
+        plusBtn.addEventListener("click", () => {
+            qty++;
+            qtyValue.textContent = qty;
+        });
+
+        minusBtn.addEventListener("click", () => {
+            if (qty > 1) {
+                qty--;
+                qtyValue.textContent = qty;
+            }
+        });
+
+        addCartBtn.addEventListener("click", () => {
+            const existing = cart.find(p => p.id === product.id);
+
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    qty: qty,
+                    images: product.images,
+                });
+            }
+
+            qty = 1;
+            qtyValue.textContent = 1;
+
+            renderCart();
+        });
+    });
+
+}
+
+loadProducts();
+
+const checkout= document.querySelector("#checkout");
+checkout.addEventListener("click", ()=> {
+    console.log(cart);
+    cart= [];
+    renderCart();
+})
