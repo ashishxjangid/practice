@@ -1,39 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="main">
-        <div id="filters">
-            <label><input type="radio" name="heading" value="h1">H1</label>
-            <label><input type="radio" name="heading" value="h2">H2</label>
-            <label><input type="radio" name="heading" value="h3">H3</label>
-               
-            <label><input type="checkbox" name="fontStyle" value="Italic">Italic</label>
-            <label><input type="checkbox" name="fontStyle" value="Bold">Bold</label>
-            <label><input type="checkbox" name="fontStyle" value="Underline">Underline</label>
-   
-        </div>
-        <input type="text" id="inputText">
-        <div id="preview"></div>
-    </div>
-    
-
-    <script src="app.js"></script>
-</body>
-</html>
-
-
-const inputField= document.querySelector("#inputText");
-const previewField= document.querySelector("#preview");
-
-inputField.addEventListener("input", ()=> {
-    previewField.textContent= inputField.value;
-
     document.querySelectorAll('input[name="heading"]').forEach((input) => {
         if(input.checked && input.value==="h1"){            
             previewField.style.fontSize="2em";
@@ -58,3 +22,71 @@ inputField.addEventListener("input", ()=> {
     })
 })
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Text Editor</title>
+<style>
+    #preview {
+        border: 1px solid #ccc;
+        min-height: 100px;
+        padding: 10px;
+        margin-top: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div id="filters">
+    <label><input type="radio" name="heading" value="h1"> H1</label>
+    <label><input type="radio" name="heading" value="h2"> H2</label>
+    <label><input type="radio" name="heading" value="h3"> H3</label>
+    <br><br>
+    <label><input type="checkbox" value="bold"> Bold</label>
+    <label><input type="checkbox" value="italic"> Italic</label>
+    <label><input type="checkbox" value="underline"> Underline</label>
+</div>
+
+<br>
+<input type="text" id="inputText" placeholder="Type here...">
+<div id="preview"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
+    const input = document.getElementById("inputText");
+const preview = document.getElementById("preview");
+
+let lastValue = "";
+
+input.addEventListener("input", () => {
+    const currentValue = input.value;
+
+    // Find only newly typed text
+    const newText = currentValue.slice(lastValue.length);
+
+    if (newText) {
+        let element = document.createElement(getHeading());
+
+        element.textContent = newText;
+
+        // Apply font styles
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            if (cb.checked) {
+                if (cb.value === "bold") element.style.fontWeight = "bold";
+                if (cb.value === "italic") element.style.fontStyle = "italic";
+                if (cb.value === "underline") element.style.textDecoration = "underline";
+            }
+        });
+
+        preview.appendChild(element);
+    }
+
+    lastValue = currentValue;
+});
+
+function getHeading() {
+    const selected = document.querySelector('input[name="heading"]:checked');
+    return selected ? selected.value : "span";
+}
