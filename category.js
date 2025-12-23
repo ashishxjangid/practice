@@ -4,118 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div style="display:flex;">
-        <div id="products"></div>
-        <div id="categories">
-            <label><input type="radio" name="category" value="all" /> all</label>
-            <label><input type="radio" name="category" value="fruits" /> fruits</label>
-            <label><input type="radio" name="category" value="vegetables" /> vegetables</label>
-            <label><input type="radio" name="category" value="flowers" /> flowers</label>
+    <div id="main">
+        <div id="filters">
+            <label><input type="radio" name="heading" value="h1">H1</label>
+            <label><input type="radio" name="heading" value="h2">H2</label>
+            <label><input type="radio" name="heading" value="h3">H3</label>
+               
+            <label><input type="checkbox" name="fontStyle" value="Italic">Italic</label>
+            <label><input type="checkbox" name="fontStyle" value="Bold">Bold</label>
+            <label><input type="checkbox" name="fontStyle" value="Underline">Underline</label>
+   
         </div>
+        <input type="text" id="inputText">
+        <div id="preview"></div>
     </div>
+    
 
     <script src="app.js"></script>
 </body>
 </html>
 
 
-const productsContainer= document.querySelector("#products");
-productsContainer.style="display: grid; grid-template-columns: 1fr 1fr 1fr; margin:100px; margin-left:200px; width:50%;"
+const inputField= document.querySelector("#inputText");
+const previewField= document.querySelector("#preview");
 
-const categoriesContainer= document.querySelector("#categories");
-categoriesContainer.style= "display:flex; flex-direction:column; width:8%; height:150px; font-size:22px; border:1px solid black; margin:100px; gap:15px; padding:10px;"
+inputField.addEventListener("input", ()=> {
+    previewField.textContent= inputField.value;
 
-const urls= ["https://t4.ftcdn.net/jpg/15/35/16/15/240_F_1535161513_RbGU7j2y57MNn0zPo7FkZOmalMkJc6Nz.jpg", "https://t4.ftcdn.net/jpg/16/02/65/69/240_F_1602656907_xoKlqjchznolmPXK9HRik4KR2f3WCzTj.jpg",
-    "https://t4.ftcdn.net/jpg/18/20/50/85/240_F_1820508506_9tprllQQL8sspsYr9bbu39NfStxlUJxp.jpg","https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
-    "https://t3.ftcdn.net/jpg/03/02/13/68/240_F_302136848_Dhf0FUEKTIIRyMeCdBfJVVxavVSh4zM8.jpg","https://t4.ftcdn.net/jpg/15/75/79/01/240_F_1575790148_AwGDvhJcTps0p9vkiXL7WQFyYxzqvREk.jpg",
-    "https://t3.ftcdn.net/jpg/15/70/15/32/240_F_1570153220_ZUNnZHIATpIgKit4VGdxURi1IuOIWBE6.jpg","https://t3.ftcdn.net/jpg/16/76/54/70/240_F_1676547044_NmPuDm37Agk0d52l79Dx4Lo3HLpjqhw9.jpg",
-    "https://t3.ftcdn.net/jpg/05/68/96/92/240_F_568969200_FBwvEKlu4AFx1nfUYFv6yAENCBrvv9TE.jpg"
-];
-
-urls.forEach((url) => {    
-    const img= document.createElement("img");
-    img.className= "all";
-    img.src= url;
-    img.width= "200";
-    productsContainer.append(img);
-})
-
-
-function displayProducts(products){
-    document.querySelectorAll("#products .all").forEach(i => i.style.display= "none");
-
-    products.forEach((product) => {
-        product.style.display= "block";
+    document.querySelectorAll('input[name="heading"]').forEach((input) => {
+        if(input.checked && input.value==="h1"){            
+            previewField.style.fontSize="2em";
+        }
+        if(input.checked && input.value==="h2"){            
+            previewField.style.fontSize="1.5em";
+        }
+        if(input.checked && input.value==="h3"){            
+            previewField.style.fontSize="1.17em";
+        }
     })
-}
-
-document.querySelectorAll("#categories input").forEach((input) => {
-    input.addEventListener("change", ()=> {
-        if(input.checked){
-            const items= document.querySelectorAll(`.${input.value}`);
-            displayProducts(items);
+    document.querySelectorAll('input[name="fontStyle"]').forEach((input) => {
+        if(input.checked && input.value==="Italic"){            
+            previewField.style.fontStyle="italic";
+        }
+        if(input.checked && input.value==="Bold"){            
+            previewField.style.fontWeight="bold";
+        }
+        if(input.checked && input.value==="Underline"){            
+            previewField.style.textDecoration= "underline";
         }
     })
 })
 
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1 style="margin: 100px 0 0 550px;">Products</h1>
-    <div style="display:flex;">
-        <div id="products" style="display: grid; grid-template-columns: 1fr 1fr 1fr; margin:100px 200px 0 200px; width:45%; gap:50px; background-color: #d9e1e4; border-radius: 10px; padding:15px;"></div>
-        <select id="categories" style= "font-size:20px; border:1px solid black; border-radius: 5px; margin-top:150px; height:40px; text-align: center;">
-            <option value="all"> all</option>
-            <option value="fruits"> fruits</option>
-            <option value="vegetables"> vegetables</option>
-            <option value="flowers"> flowers</option>
-        </select>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
-
-const urls= { fruits: ["https://t4.ftcdn.net/jpg/15/35/16/15/240_F_1535161513_RbGU7j2y57MNn0zPo7FkZOmalMkJc6Nz.jpg", "https://t4.ftcdn.net/jpg/16/02/65/69/240_F_1602656907_xoKlqjchznolmPXK9HRik4KR2f3WCzTj.jpg","https://t4.ftcdn.net/jpg/18/20/50/85/240_F_1820508506_9tprllQQL8sspsYr9bbu39NfStxlUJxp.jpg"],
-            vegetables: ["https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg","https://t3.ftcdn.net/jpg/03/02/13/68/240_F_302136848_Dhf0FUEKTIIRyMeCdBfJVVxavVSh4zM8.jpg","https://t4.ftcdn.net/jpg/15/75/79/01/240_F_1575790148_AwGDvhJcTps0p9vkiXL7WQFyYxzqvREk.jpg"],
-            flowers: ["https://t3.ftcdn.net/jpg/15/70/15/32/240_F_1570153220_ZUNnZHIATpIgKit4VGdxURi1IuOIWBE6.jpg","https://t3.ftcdn.net/jpg/16/76/54/70/240_F_1676547044_NmPuDm37Agk0d52l79Dx4Lo3HLpjqhw9.jpg","https://t3.ftcdn.net/jpg/05/68/96/92/240_F_568969200_FBwvEKlu4AFx1nfUYFv6yAENCBrvv9TE.jpg"]  
-}
-const all= urls.fruits.concat(urls.vegetables, urls.flowers);
-
-const productsDiv= document.querySelector("#products");
-
-function showImages(arr){
-    productsDiv.innerHTML="";
-    arr.forEach((url) => {    
-        const img= document.createElement("img");
-        img.src= url;
-        img.width= "200";
-        productsDiv.append(img);
-    })
-}
-
-const dropdown= document.querySelector("#categories");
-dropdown.addEventListener("change", ()=> {    
-    if(dropdown.value==="all"){
-        showImages(all);
-    }
-    else{
-        const cat= dropdown.value;
-        showImages();
-    }
-        
-})
