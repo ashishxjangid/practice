@@ -78,3 +78,44 @@ input.addEventListener("input", () => {
 .h2 { font-size: 1.5em; font-weight: bold; }
 .h3 { font-size: 1.17em; font-weight: bold; }
 
+const input = document.getElementById("inputText");
+const preview = document.getElementById("preview");
+
+let lastValue = "";
+let currentLine = document.createElement("p");
+let currentSpan = null;
+let lastStyleKey = "";
+
+preview.appendChild(currentLine);
+
+input.addEventListener("input", () => {
+    const value = input.value;
+
+    // New line
+    if (value.endsWith("\n")) {
+        currentLine = document.createElement("p");
+        preview.appendChild(currentLine);
+        currentSpan = null;
+        lastValue = value;
+        return;
+    }
+
+    const newText = value.slice(lastValue.length);
+    if (!newText) return;
+
+    const styleKey = getStyleKey();
+
+    // Create new span ONLY if style changed
+    if (!currentSpan || styleKey !== lastStyleKey) {
+        currentSpan = document.createElement("span");
+        applyStyles(currentSpan);
+        currentLine.appendChild(currentSpan);
+        lastStyleKey = styleKey;
+    }
+
+    currentSpan.textContent += newText;
+    lastValue = value;
+});
+
+function getStyleKey() {
+    const heading = document.querySelector
