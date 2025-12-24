@@ -1,40 +1,9 @@
-    document.querySelectorAll('input[name="heading"]').forEach((input) => {
-        if(input.checked && input.value==="h1"){            
-            previewField.style.fontSize="2em";
-        }
-        if(input.checked && input.value==="h2"){            
-            previewField.style.fontSize="1.5em";
-        }
-        if(input.checked && input.value==="h3"){            
-            previewField.style.fontSize="1.17em";
-        }
-    })
-    document.querySelectorAll('input[name="fontStyle"]').forEach((input) => {
-        if(input.checked && input.value==="Italic"){            
-            previewField.style.fontStyle="italic";
-        }
-        if(input.checked && input.value==="Bold"){            
-            previewField.style.fontWeight="bold";
-        }
-        if(input.checked && input.value==="Underline"){            
-            previewField.style.textDecoration= "underline";
-        }
-    })
-})
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Live Text Editor</title>
-<style>
-    #preview {
-        border: 1px solid #ccc;
-        min-height: 100px;
-        padding: 10px;
-        margin-top: 10px;
-    }
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -49,13 +18,16 @@
 </div>
 
 <br>
-<input type="text" id="inputText" placeholder="Type here...">
+<textarea id="inputText"></textarea>
 <div id="preview"></div>
 
 <script src="app.js"></script>
 </body>
 </html>
-    const input = document.getElementById("inputText");
+
+
+
+const input = document.getElementById("inputText");
 const preview = document.getElementById("preview");
 
 let lastValue = "";
@@ -67,10 +39,14 @@ input.addEventListener("input", () => {
     const newText = currentValue.slice(lastValue.length);
 
     if (newText) {
-        let element = document.createElement(getHeading());
+        let element = document.createElement("span");
 
         element.textContent = newText;
-
+        
+        const selected = document.querySelector('input[name="heading"]:checked');
+        if(selected){
+            element.classList.add(selected.value);
+        }
         // Apply font styles
         document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
             if (cb.checked) {
@@ -86,7 +62,19 @@ input.addEventListener("input", () => {
     lastValue = currentValue;
 });
 
-function getHeading() {
-    const selected = document.querySelector('input[name="heading"]:checked');
-    return selected ? selected.value : "span";
+
+ #preview {
+    border: 1px solid #ccc;
+    min-height: 100px;
+    width: 700px;
 }
+
+#inputText {
+    width: 700px;
+    height: 100px;
+}
+
+.h1 { font-size: 2em; font-weight: bold; }
+.h2 { font-size: 1.5em; font-weight: bold; }
+.h3 { font-size: 1.17em; font-weight: bold; }
+
