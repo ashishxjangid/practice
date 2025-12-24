@@ -1,39 +1,20 @@
-const addBtn= document.querySelector("#addBtn");
-const inputBox= document.querySelector("#inputBox");
-const taskList= document.querySelector("#taskList"); 
 
-function createTask(value){
-    const task= document.createElement("div");
-    task.classList.add("taskDiv");
+editBtn.addEventListener("click", () => {
+    // If currently in Edit mode
+    if (editBtn.textContent === "Edit") {
+        const editInput = document.createElement("input");
+        editInput.type = "text";
+        editInput.value = name.textContent;
 
-    const name= document.createElement("span");
-    name.textContent= value;
-    task.append(name);
+        task.replaceChild(editInput, name);
+        editBtn.textContent = "Save";
 
-    const editBtn= document.createElement("button");
-    editBtn.textContent= "Edit";
-    task.append(editBtn);
+    } else {
+        const newName = document.createElement("span");
+        newName.textContent = task.querySelector("input").value;
 
-    editBtn.addEventListener("click", ()=> {
-        
-    })
-
-    const deleteBtn= document.createElement("button");
-    deleteBtn.textContent= "Delete";
-    task.append(deleteBtn); 
-
-    deleteBtn.addEventListener("click", ()=> {
-        task.remove();
-    })
-    
-
-    taskList.append(task);
-}
-
-addBtn.addEventListener("click", ()=> {
-    if(inputBox.value){
-        createTask(inputBox.value);
-        inputBox.value= "";
+        task.replaceChild(newName, task.querySelector("input"));
+        name = newName; // update reference
+        editBtn.textContent = "Edit";
     }
-    
-})
+});
