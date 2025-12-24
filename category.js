@@ -119,3 +119,47 @@ input.addEventListener("input", () => {
 
 function getStyleKey() {
     const heading = document.querySelector
+
+
+    const inputField= document.querySelector("#inputText");
+const previewField= document.querySelector("#preview");
+
+let lastValue = "";
+
+inputField.addEventListener("input", ()=> {
+   
+    const currentValue= inputField.value;
+    
+    const newText = currentValue.slice(lastValue.length);
+
+    if(newText){
+
+        //Heading style
+        let element= document.createElement(applyHeading());
+        element.style.display= "inline";
+        element.textContent = newText;
+
+        //Font style
+        document.querySelectorAll('input[name="fontStyle"]').forEach((fontBtn) => {
+            if(fontBtn.checked){
+                if(fontBtn.value==="Italic"){            
+                    element.style.fontStyle="italic";
+                }
+                if(fontBtn.value==="Bold"){            
+                    element.style.fontWeight="bold";
+                }
+                if(fontBtn.value==="Underline"){            
+                    element.style.textDecoration= "underline";
+                }
+            }
+        })
+        previewField.append(element);
+    }
+
+    lastValue= currentValue;
+})
+
+function applyHeading() {
+    const selected = document.querySelector('input[name="heading"]:checked');
+    return selected ? selected.value : "span";
+}
