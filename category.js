@@ -1,20 +1,22 @@
-// const colorFilter= document.querySelector("#sg__swatch_option-0");
+const colorFilter= document.querySelector("#sg__swatch_option-0");
 
-// const clonedColorFilter= colorFilter.cloneNode(true);
-// clonedColorFilter.id= "colorFilter";
+const clonedColorFilter= colorFilter.cloneNode(true);
+clonedColorFilter.id= "colorFilter";
 
-// document.body.append(clonedColorFilter);
+document.body.append(clonedColorFilter);
 
-// const sizeFilter= document.querySelector("#sg__swatch_option-1");
+const sizeFilter= document.querySelector("#sg__swatch_option-1");
 
-// const clonedSizeFilter= sizeFilter.cloneNode(true);
+const clonedSizeFilter= sizeFilter.cloneNode(true);
 
-// document.body.append(clonedSizeFilter);
+document.body.append(clonedSizeFilter);
 
-// const buttons= document.querySelectorAll("#colorFilter .sg__swatch_option-item");
-// buttons.forEach((btn) => {
-//     btn.addEventListener("click", ()=> {
-//         buttons.forEach(b => b.classList.remove("sg__swatch-active"));
-//         btn.classList.add("sg__swatch-active");
-//     })
-// })
+const buttons= document.querySelectorAll("#colorFilter .sg__swatch_option-item");
+buttons.forEach((btn) => {
+    btn.addEventListener("click", ()=> {
+        buttons.forEach(b => b.classList.remove("sg__swatch-active"));
+        btn.classList.add("sg__swatch-active");
+        document.querySelector('#sg__swatch_option-0 .sg__swatch_option-item[data-sg-value=`${btn.getAttribute(data-sg-value)}`]').click();
+
+    })
+})
